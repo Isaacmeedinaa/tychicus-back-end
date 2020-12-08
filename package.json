@@ -1,0 +1,11 @@
+{
+  "name": "tychicus-back-end",
+  "version": "1.0.0",
+  "description": "Tychicus is an application dedicated to the Apostle of Jesus Christ, NJG and the church's ministers. This repo contains the back-end project for Tychicus.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Isaac Medina",
+  "license": "ISC"
+}
