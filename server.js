@@ -5,6 +5,7 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 
+require("./startup/cloudinaryConfig")();
 require("./startup/db")();
 
 // Opens port for web server
