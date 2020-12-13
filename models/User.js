@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const userSchema = new mongoose.Schema({
+  imgUrl: { type: String, min: 1, required: true },
   firstName: { type: String, min: 1, max: 50, required: true },
   lastName: { type: String, min: 1, max: 50, required: true },
   username: { type: String, min: 6, max: 50, required: true, unique: true },
@@ -57,22 +58,27 @@ const passwordComplexityOptions = {
 
 const userValidator = (user) => {
   const schema = Joi.object({
+    imgUrl: Joi.string().min(1).required().messages({
+      "string.base": "Image URL should be a string.",
+      "string.empty": "Image URL cannot be empty.",
+      "string.min": "Image URL should at least be 1 characters long.",
+    }),
     firstName: Joi.string().min(1).max(50).required().messages({
       "string.base": "First name should be a string.",
       "string.empty": "First name cannot be empty.",
-      "string.min": "First name should at least be 3 characters long.",
+      "string.min": "First name should at least be 1 characters long.",
       "string.max": "First name should not be over 50 characters long.",
     }),
     lastName: Joi.string().min(1).max(50).required().messages({
       "string.base": "Last name should be a string.",
       "string.empty": "Last name cannot be empty.",
-      "string.min": "Last name should at least be 3 characters long.",
+      "string.min": "Last name should at least be 1 characters long.",
       "string.max": "Last name should not be over 50 characters long.",
     }),
     username: Joi.string().alphanum().min(6).max(50).required().messages({
       "string.base": "Username should be a string.",
       "string.empty": "Username cannot be empty.",
-      "string.min": "Username should at least be 3 characters long.",
+      "string.min": "Username should at least be 6 characters long.",
       "string.max": "Username should not be over 50 characters long.",
       "string.alphanum": "Username must only contain alpha-numeric characters.",
     }),
