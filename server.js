@@ -6,6 +6,7 @@ const app = express();
 app.use(cors());
 
 require("./startup/cloudinaryConfig")();
+require("./startup/routes")(app);
 require("./startup/db")();
 
 // Opens port for web server
