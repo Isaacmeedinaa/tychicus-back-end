@@ -3,13 +3,13 @@ require("dotenv").config();
 
 const db = () => {
   mongoose
-    .connect(process.env.DB_URL, {
+    .connect(process.env.DB_LOCAL_URL, {
       useCreateIndex: true,
       useFindAndModify: false,
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => console.log("connected to MongoDB 🚀!"))
+    .then(() => console.log("Connected to MongoDB 🚀!"))
     .catch((err) => console.log(err));
 };
 

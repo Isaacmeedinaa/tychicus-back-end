@@ -6,7 +6,11 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const userSchema = new mongoose.Schema({
-  imgUrl: { type: String, min: 1, required: true },
+  profileImage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Image",
+    required: false,
+  },
   firstName: { type: String, min: 1, max: 50, required: true },
   lastName: { type: String, min: 1, max: 50, required: true },
   username: { type: String, min: 6, max: 50, required: true, unique: true },
@@ -58,11 +62,7 @@ const passwordComplexityOptions = {
 
 const userValidator = (user) => {
   const schema = Joi.object({
-    imgUrl: Joi.string().min(1).required().messages({
-      "string.base": "Image URL should be a string.",
-      "string.empty": "Image URL cannot be empty.",
-      "string.min": "Image URL should at least be 1 characters long.",
-    }),
+    profileImage: Joi.objectId(),
     firstName: Joi.string().min(1).max(50).required().messages({
       "string.base": "First name should be a string.",
       "string.empty": "First name cannot be empty.",
