@@ -5,8 +5,8 @@ Joi.objectId = require("joi-objectid")(Joi);
 const postSchema = new mongoose.Schema(
   {
     text: { type: String, min: 1, required: true },
-    images: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Image", required: true },
+    files: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "File", required: true },
     ],
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     comments: [
@@ -36,7 +36,7 @@ const postValidator = (post) => {
       "string.empty": "Post cannot be empty.",
       "string.min": "Post should be at least 1 character long.",
     }),
-    images: Joi.array().items({ image: Joi.objectId().required() }),
+    files: Joi.array().items({ file: Joi.objectId().required() }),
     user: Joi.objectId().required().messages({
       "any.required": "User is required.",
     }),
