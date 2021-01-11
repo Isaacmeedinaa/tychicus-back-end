@@ -1,8 +1,9 @@
 const _ = require("lodash");
+const fs = require("fs");
 const bcrypt = require("bcrypt");
 const cloudinary = require("cloudinary").v2;
 const { User, userValidator } = require("../models/User");
-const { Image, imageValidator } = require("../models/Image");
+const { File, fileValidator } = require("../models/File");
 
 const userController = {
   getUsers: async (req, res) => {
@@ -23,7 +24,6 @@ const userController = {
 
       res.send(user);
     } catch (err) {
-      console.log(err);
       return res.status(404).send("User was not found!");
     }
   },
@@ -33,7 +33,7 @@ const userController = {
 
     if (error) {
       const errorsArray = error.details.map((error) => error.message);
-      return res.status(400).send(errorsArray);
+      return res.status(400).send({ validationErrors: errorsArray });
     }
 
     user = await User.findOne({ username: req.body.username });
@@ -155,10 +155,12 @@ const userController = {
     const cloudinaryImageDataObj = {
       url: cloudinaryImageData.url,
       publicId: cloudinaryImageData.public_id,
+      fileType: cloudinaryImageData.format,
+      type: "Profile Image",
       user: req.body.user,
     };
 
-    const { error } = imageValidator(cloudinaryImageDataObj);
+    const { error } = fileValidator(cloudinaryImageDataObj);
 
     if (error) {
       await cloudinary.uploader.destroy(cloudinaryImageData.public_id);
@@ -167,12 +169,12 @@ const userController = {
     }
 
     if (user.profileImage) {
-      let currentProfileImage = await Image.findById(user.profileImage);
+      let currentProfileImage = await File.findById(user.profileImage);
       await cloudinary.uploader.destroy(currentProfileImage.publicId);
       await currentProfileImage.remove();
     }
 
-    let profileImage = new Image(cloudinaryImageDataObj);
+    let profileImage = new File(cloudinaryImageDataObj);
 
     profileImage = await profileImage.save();
 
@@ -180,14 +182,16 @@ const userController = {
 
     user = await user.save();
 
-    profileImage = await Image.find(profileImage._id).select("-__v -user");
+    fs.unlinkSync(`./${file.path}`);
+
+    profileImage = await File.find(profileImage._id).select("-__v -user");
 
     res.send(profileImage);
   },
   deleteProfileImage: async (req, res) => {
     let profileImage;
     try {
-      profileImage = await Image.findById(req.params.id).select("-__v");
+      profileImage = await File.findById(req.params.id).select("-__v");
 
       if (!profileImage)
         return res.status(404).send("Profile image was not found!");

@@ -8,7 +8,7 @@ require("dotenv").config();
 const userSchema = new mongoose.Schema({
   profileImage: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Image",
+    ref: "File",
     required: false,
   },
   firstName: { type: String, min: 1, max: 50, required: true },

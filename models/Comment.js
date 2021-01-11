@@ -8,6 +8,7 @@ const commentSchema = new mongoose.Schema(
     imgUrl: { type: String, min: 1, required: false },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     post: { type: mongoose.Schema.Types.ObjectId, ref: "Post", required: true },
+    file: { type: mongoose.Schema.Types.ObjectId, ref: "File" },
     likes: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Like", required: true },
     ],
@@ -43,6 +44,7 @@ const commentValidator = (comment) => {
     post: Joi.objectId().required().messages({
       "any.required": "Post is required.",
     }),
+    file: Joi.objectId(),
     likes: Joi.array().items({ like: Joi.objectId().required() }),
   }).options({ abortEarly: false });
 
